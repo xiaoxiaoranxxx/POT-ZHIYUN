@@ -15,4 +15,4 @@ use think\facade\Env;
 //     return 'hello,ThinkPHP6!';
 // });
 
-// Route::get('admin', 'index/admin');
+Route::get('admin', 'index/admin');
