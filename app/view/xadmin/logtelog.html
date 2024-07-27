@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/css/public.css" media="all">
+</head>
+
+<body>
+    <script type="text/html" id="ID-table-demo-templet-switch">
+            <input type="checkbox" name="wafstatus" lay-skin="switch" {{d.wafstatus===1 ? "checked" : "" }} disabled>
+            </script>
+    <script type="text/html" id="ID-table-demo-templet-hun">
+                        <input type="checkbox" name="wafstatus" lay-skin="switch" {{d.confusion===1 ? "checked" : "" }} disabled>
+                        </script>
+    <div class="layuimini-container">
+        <div class="layuimini-main">
+
+            <fieldset id="elementId" class="table-search-fieldset layui-hide">
+                <legend>搜索信息</legend>
+                <div style="margin: 10px 10px 10px 10px">
+                    <form class="layui-form layui-form-pane" action="">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">用户ip</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="userip" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">ip归属</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="useraddrip" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">日期</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="date" id="ID-laydate" autocomplete="off"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">状态码</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="statuscode" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">恶意流量</label>
+                                <div class="layui-input-inline">
+                                    <select name="wafstatus">
+                                        <option value="">请选择</option>
+                                        <option value="0">全部流量</option>
+                                        <option value="1">恶意流量</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">混淆流量</label>
+                                <div class="layui-input-inline">
+                                    <select name="confusion">
+                                        <option value="">请选择</option>
+                                        <option value="0">全部流量</option>
+                                        <option value="1">混淆流量</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">恶意分类</label>
+                                <div class="layui-input-inline">
+                                    <select name="waf">
+                                        <option value="">请选择</option>
+                                        <option value="SQL注入">SQL注入</option>
+                                        <option value="流协议攻击">流协议攻击</option>
+                                        <option value="目录遍历">目录遍历</option>
+                                        <option value="命令执行">命令执行</option>
+                                        <option value="XSS攻击">XSS攻击</option>
+                                        <option value="扫描器探测">扫描器探测</option>
+                                        <option value="敏感文件获取">敏感文件获取</option>
+                                        <option value="误报">误报</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <button type="submit" class="layui-btn layui-btn-primary" lay-submit
+                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                                <button type="reset" class="layui-btn layui-btn-primary" id="reset-btn">
+                                    <i class="layui-icon"></i> 重 置
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </fieldset>
+
+            <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 修改标签 </button>
+                <!-- <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 收藏 </button> -->
+            </div>
+        </script>
+
+            <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+            <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">详情</a>
+        </script>
+
+        </div>
+    </div>
+    <script src="/static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script>
+        layui.use(['form', 'table', 'laydate'], function () {
+            var $ = layui.jquery,
+                form = layui.form,
+                laydate = layui.laydate,
+                table = layui.table;
+
+            laydate.render({
+                elem: '#ID-laydate'
+            });
+
+
+            table.render({
+                elem: '#currentTableId',
+                url: '/xadmin/logtelog',
+                contentType: 'application/json',
+                method: 'post',
+                even: true,
+                toolbar: '#toolbarDemo',
+                defaultToolbar: [{
+                    title: '搜索',
+                    layEvent: 'LAYTABLE_TIPS',
+                    icon: 'layui-icon-search'
+                }, 'filter', 'exports', 'print'],
+                cols: [[
+                    { type: "checkbox", width: 50 },
+                    { field: 'id', width: 80, title: 'ID' },
+                    { field: 'date', width: 160, title: '日期' },
+                    { field: 'userip', width: 140, title: '访问IP' },
+                    { field: 'useraddrip', width: 150, title: 'IP归属' },
+                    { field: 'statuscode', title: '状态码', width: 80, align: "center" },
+                    {
+                        field: 'requests', title: '请求报文', minWidth: 200, templet: function (d) {
+                            var base64Decoded = atob(d.requests);
+                            var textDecoder = new TextDecoder('utf-8');
+                            var decodedResponse = textDecoder.decode(new Uint8Array([...base64Decoded].map(c => c.charCodeAt(0))));
+                            var firstLine = decodedResponse.split('\n')[0];
+                            return layui.util.escape(firstLine);
+                        }
+                    },
+                    { field: 'wafstatus', width: 80, title: '恶意', templet: '#ID-table-demo-templet-switch' },
+                    { field: 'confusion', width: 80, title: '混淆', templet: '#ID-table-demo-templet-hun' },
+                    { field: 'waf', minWidth: 80, title: '分类标签', width: 100 },
+                    { title: '操作', minWidth: 50, toolbar: '#currentTableBar', align: "center" }
+                ]],
+                limits: [10, 25, 50, 100],
+                limit: 10,
+                page: true,
+                skin: 'line'
+            });
+
+            // 监听搜索操作
+            form.on('submit(data-search-btn)', function (data) {
+                var result = JSON.stringify(data.field);
+                //执行搜索重载
+                table.reload('currentTableId', {
+                    page: {
+                        curr: 1
+                    }
+                    , where: {
+                        searchParams: result
+                    }, done: function (res, curr, count) {
+                        if (res.code === 0) {
+                            layer.msg("搜索成功，成功搜索到" + res.count + "条数据");
+                        } else {
+                            layer.msg('未搜索到数据或发生错误');
+                        }
+                    }
+                });
+                return false;
+            });
+
+            /**
+             * toolbar监听事件
+             */
+            table.on('toolbar(currentTableFilter)', function (obj) {
+                if (obj.event === 'add') {  // 监听修改标签操作
+                    var checkStatus = table.checkStatus('currentTableId')
+                        , data = checkStatus.data;
+                    if (data.length !== 1) {
+                        return layer.msg('请选择一行');
+                    } else {
+                        var jsonData = { key: data[0].id };
+                        $.ajax({
+                            url: '/xadmin/logtewhere',
+                            type: 'POST',
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            data: JSON.stringify(jsonData),
+                            success: function (response) {
+                                var index = layer.open({
+                                    title: '修改标签',
+                                    type: 2,
+                                    shade: 0.2,
+                                    maxmin: true,
+                                    shadeClose: true,
+                                    area: ['40%', '85%'],
+                                    content: '/xadmin/logteupdate'
+                                });
+                            },
+                            error: function (error) {
+                                console.error(error);
+                            }
+                        });
+                    }
+                    $(window).on("resize", function () {
+                        layer.full(index);
+                    });
+                } else if (obj.event === 'delete') {  // 监听收藏操作
+                    var checkStatus = table.checkStatus('currentTableId')
+                        , data = checkStatus.data;
+                    layer.alert('收藏');
+                } else if (obj.event === 'LAYTABLE_TIPS') {
+                    layui.$('#elementId').toggleClass('layui-hide');
+                }
+            });
+
+            //监听表格复选框选择
+            // table.on('checkbox(currentTableFilter)', function (obj) {
+            //     console.log(obj)
+            // });
+
+            table.on('tool(currentTableFilter)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    var contentHtml = '';
+                    var base64DecodedRequests = atob(data.requests);
+                    var base64DecodedResponse = atob(data.response);
+                    var textDecoder = new TextDecoder('utf-8');
+                    var RequestsHtml = layui.util.escape(textDecoder.decode(new Uint8Array([...base64DecodedRequests].map(c => c.charCodeAt(0)))));
+                    var ResponseHtml = layui.util.escape(textDecoder.decode(new Uint8Array([...base64DecodedResponse].map(c => c.charCodeAt(0)))));
+                    if (data.wafstatus === 0) {
+                        contentHtml += '<span style="color: blue;">该报文未匹配到恶意字段</span><br>';
+                    } else {
+                        contentHtml += '<span style="color: red;">该报文匹配到的标签为: ' + layui.util.escape(data.waf) + '<br>匹配到的字段为: ' + layui.util.escape(data.wafmatches) + '</span><br>';
+                    }
+                    contentHtml += '<h2>请求报文: </h2><pre class="layui-code">' + RequestsHtml + '</pre>';
+                    contentHtml += '<h2>响应报文: </h2><pre class="layui-code">' + ResponseHtml + '</pre>';
+                    var index = layer.open({
+                        title: '报文分析',
+                        type: 0,
+                        shade: 0.2,
+                        maxmin: true,
+                        shadeClose: true,
+                        area: ['70%', '70%'],
+                        content: contentHtml,
+                    });
+                    $(window).on("resize", function () {
+                        layer.full(index);
+                    });
+                    return false;
+                } else if (obj.event === 'delete') {
+                    layer.confirm('真的删除行么', function (index) {
+                        obj.del();
+                        layer.close(index);
+                    });
+                }
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>首页二</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="/static/css/public.css" media="all">
+    <style>
+        .layui-card {
+            border: 1px solid #f2f2f2;
+            border-radius: 5px;
+        }
+
+        .icon {
+            margin-right: 10px;
+            color: #1aa094;
+        }
+
+        .icon-cray {
+            color: #ffb800 !important;
+        }
+
+        .icon-blue {
+            color: #1e9fff !important;
+        }
+
+        .icon-tip {
+            color: #ff5722 !important;
+        }
+
+        .layuimini-qiuck-module {
+            text-align: center;
+            margin-top: 10px
+        }
+
+        .layuimini-qiuck-module a i {
+            display: inline-block;
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            border-radius: 2px;
+            font-size: 30px;
+            background-color: #F8F8F8;
+            color: #333;
+            transition: all .3s;
+            -webkit-transition: all .3s;
+        }
+
+        .layuimini-qiuck-module a cite {
+            position: relative;
+            top: 2px;
+            display: block;
+            color: #666;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+
+        .welcome-module {
+            width: 100%;
+            height: 210px;
+        }
+
+        .panel {
+            background-color: #fff;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .05)
+        }
+
+        .panel-body {
+            padding: 10px
+        }
+
+        .panel-title {
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 12px;
+            color: inherit
+        }
+
+        .label {
+            display: inline;
+            padding: .2em .6em .3em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .25em;
+            margin-top: .3em;
+        }
+
+        .layui-red {
+            color: red
+        }
+
+        .main_btn>p {
+            height: 40px;
+        }
+
+        .layui-bg-number {
+            background-color: #F8F8F8;
+        }
+
+        .layuimini-notice:hover {
+            background: #f6f6f6;
+        }
+
+        .layuimini-notice {
+            padding: 7px 16px;
+            clear: both;
+            font-size: 12px !important;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s ease-in-out;
+        }
+
+        .layuimini-notice-title,
+        .layuimini-notice-label {
+            padding-right: 70px !important;
+            text-overflow: ellipsis !important;
+            overflow: hidden !important;
+            white-space: nowrap !important;
+        }
+
+        .layuimini-notice-title {
+            line-height: 28px;
+            font-size: 14px;
+        }
+
+        .layuimini-notice-extra {
+            position: absolute;
+            top: 50%;
+            margin-top: -8px;
+            right: 16px;
+            display: inline-block;
+            height: 16px;
+            color: #999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layuimini-container">
+        <div class="layuimini-main">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md8">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md12">
+                            <div class="layui-card">
+                                <!-- <div class="layui-card-header"><i class="fa fa-line-chart icon"></i>报表统计</div> -->
+                                <div class="layui-card-body">
+                                    <div id="echarts-records" style="width: 100%;min-height:400px"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-card">
+                                <div class="layui-card-header"><i class="fa fa-warning icon"></i>数据统计</div>
+                                <div class="layui-card-body">
+                                    <div class="welcome-module">
+                                        <div class="layui-row layui-col-space10">
+                                            <div class="layui-col-xs6">
+                                                <div class="panel layui-bg-number">
+                                                    <div class="panel-body">
+                                                        <div class="panel-title">
+                                                            <span class="label pull-right layui-bg-orange">实时</span>
+                                                            <h5>今日总访问量</h5>
+                                                        </div>
+                                                        <div class="panel-content">
+                                                            <h1 class="no-margins">{$allregister}</h1>
+                                                            <small>今天访问总数</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="layui-col-xs6">
+                                                <div class="panel layui-bg-number">
+                                                    <div class="panel-body">
+                                                        <div class="panel-title">
+                                                            <span class="label pull-right layui-bg-green">实时</span>
+                                                            <h5>今日恶意流量数</h5>
+                                                        </div>
+                                                        <div class="panel-content">
+                                                            <h1 class="no-margins">{$allntlm}</h1>
+                                                            <small>今日恶意流量总数</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs6">
+                                                <div class="panel layui-bg-number">
+                                                    <div class="panel-body">
+                                                        <div class="panel-title">
+                                                            <span class="label pull-right layui-bg-blue">实时</span>
+                                                            <h5>所有流量统计</h5>
+                                                        </div>
+                                                        <div class="panel-content">
+                                                            <h1 class="no-margins">{$alllog}</h1>
+                                                            <small>流量总记录数</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-col-xs6">
+                                                <div class="panel layui-bg-number">
+                                                    <div class="panel-body">
+                                                        <div class="panel-title">
+                                                            <span class="label pull-right layui-bg-cyan">实时</span>
+                                                            <h5>恶意流量统计</h5>
+                                                        </div>
+                                                        <div class="panel-content">
+                                                            <h1 class="no-margins">{$allelog}</h1>
+                                                            <small>恶意流量总记录数</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-card">
+                                <div class="layui-card-header"><i class="fa fa-credit-card icon icon-blue"></i>快捷入口
+                                </div>
+                                <div class="layui-card-body">
+                                    <div class="welcome-module">
+                                        <div class="layui-row layui-col-space10 layuimini-qiuck">
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="situation" data-title="月流量态势">
+                                                    <i class="fa fa-binoculars"></i>
+                                                    <cite>月流量态势</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="potsituation"
+                                                    data-title="态势面板" data-icon="fa fa-gears">
+                                                    <i class="fa fa-dot-circle-o"></i>
+                                                    <cite>蜜罐态势面板</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="logtelog"
+                                                    data-title="蜜罐流量分析" data-icon="fa fa-user-secret">
+                                                    <i class="fa fa-user-secret"></i>
+                                                    <cite>蜜罐流量分析</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="potntlmlog"
+                                                    data-title="NTLM认证" data-icon="fa fa-bomb">
+                                                    <i class="fa fa-bomb"></i>
+                                                    <cite>NTLM认证</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="potnloginlog"
+                                                    data-title="首页登录日志" data-icon="fa fa-calendar">
+                                                    <i class="fa fa-fighter-jet"></i>
+                                                    <cite>首页登录日志</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="potuserslog"
+                                                    data-title="首页注册用户管理" data-icon="fa fa-hourglass-end">
+                                                    <i class="fa fa-plane"></i>
+                                                    <cite>首页注册日志</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="potmaillog"
+                                                    data-title="邮箱验证码记录" data-icon="fa fa-snowflake-o">
+                                                    <i class="fa fa-rocket"></i>
+                                                    <cite>邮箱验证码</cite>
+                                                </a>
+                                            </div>
+                                            <div class="layui-col-xs3 layuimini-qiuck-module">
+                                                <a href="javascript:;" layuimini-content-href="potphonelog"
+                                                    data-title="手机验证码记录" data-icon="fa fa-search">
+                                                    <i class="fa fa-space-shuttle"></i>
+                                                    <cite>手机验证码</cite>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-card">
+                        <div class="layui-card-header"><i class="fa fa-fire icon"></i>今日访问量Top15</div>
+                        <div class="layui-card-body layui-text">
+                            <table class="layui-table" id="top10Table">
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="/static/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+    <script>
+        layui.use(['layer', 'miniTab', 'echarts', 'table'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                miniTab = layui.miniTab,
+                echarts = layui.echarts;
+                table = layui.table;
+
+            miniTab.listen();
+
+            /**
+             * Top表格
+            */
+          
+            var top10data = {$top10data|raw};
+                top10data.forEach(function (row) {
+                row.wafstatus_percentage = ((row.wafstatus_count / row.count) * 100).toFixed(2) + '%';
+            });
+
+            table.render({
+                elem: '#top10Table',
+                data: top10data,
+                cols: [[
+                    { field: 'userip', minWidth: 136 ,title: 'IP' },
+                    { field: 'useraddrip', minWidth: 115 ,title: 'IP归属' },
+                    { field: 'wafstatus_percentage', minWidth: 80, title: '恶意'},
+                    { field: 'count', minWidth: 20,title: '统计'},
+                ]],
+                limit:15
+            });
+
+      
+            /**
+             * 报表功能
+             */
+            var echartsRecords = echarts.init(document.getElementById('echarts-records'), 'walden');
+            var xAxisData = []; // 存储X轴时间数据
+            var hourData = []; // 存储每小时的流量数据
+
+            // 假设有一个名为hourlyData的数组，包含24个小时的流量数据
+            var hourlyData = {$normalTraffic};
+            var maliciousHourData = {$maliciousTraffic};
+            // 生成X轴时间数据和对应的流量数据
+            for (var i = 0; i < 24; i++) {
+                var startTime = i.toString().padStart(2, '0') + ':00';
+                var endTime = (i + 1).toString().padStart(2, '0') + ':00';
+                xAxisData.push(startTime + '-' + endTime); // 使用时间范围字符串作为 x 轴的值
+                hourData.push(hourlyData[i]);
+            }
+            var optionRecords = {
+                title: {
+                    text: '当天每小时流量统计曲线图'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                },
+                legend: {
+                    data: ['所有流量', '恶意流量']
+                },
+                xAxis: {
+                    type: 'category',
+                    data: xAxisData,
+                    boundaryGap: false,
+                    // 添加点击事件处理函数
+                    axisPointer: {
+                        type: 'line',
+                        animation: false,
+                        label: {
+                            backgroundColor: '#505765'
+                        }
+                    },
+                    // 点击事件处理函数
+                    triggerEvent: true
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    name: '所有流量',
+                    type: 'line',
+                    smooth: true,
+                    data: hourData,
+                    itemStyle: {
+                        normal: {
+                            areaStyle: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: 'rgba(0, 128, 255, 0.3)'
+                                }, {
+                                    offset: 1,
+                                    color: 'rgba(0, 128, 255, 0)'
+                                }])
+                            }
+                        }
+                    },
+                    // 点击事件处理函数
+                    emphasis: {
+                        focus: 'series'
+                    }
+                }, {
+                    name: '恶意流量',
+                    type: 'line',
+                    smooth: true,
+                    data: maliciousHourData, // 替换为恶意流量的数据数组
+                    itemStyle: {
+                        normal: {
+                            areaStyle: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: 'rgba(255, 0, 0, 0.3)'
+                                }, {
+                                    offset: 1,
+                                    color: 'rgba(255, 0, 0, 0)'
+                                }])
+                            }
+                        }
+                    },
+                    // 点击事件处理函数
+                    emphasis: {
+                        focus: 'series'
+                    }
+                }]
+            };
+            echartsRecords.setOption(optionRecords);
+
+            // echarts 窗口缩放自适应
+            window.onresize = function () {
+                echartsRecords.resize();
+            }
+
+        });
+    </script>
+</body>
+
+</html>

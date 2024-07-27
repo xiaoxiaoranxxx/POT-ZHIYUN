@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ZHIYUN</title>
+    <link href="/static/lib/layui-v2.6.3/css/layui.css" rel="stylesheet">
+    <style>
+        html,
+        body {
+            background-color: black;
+            margin: 0;
+            padding: 0;
+        }
+
+        .layui-nav {
+            background-color: black;
+        }
+
+        .layui-nav .layui-nav-item a {
+            font-size: 15px;
+            color: rgb(255, 255, 255, 0.9);
+            font-weight: bold;
+        }
+
+        button {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layui-container">
+        <div class="layui-row">
+            <ul class="layui-nav" style="background-color: black;">
+                <div class="layui-col-sm5">
+                    <li class="layui-nav-item">
+                        <a href="/">
+                            <img src="/static/images/logo.png" / width=25px>&nbsp;&nbsp;ZHIYUN
+                        </a>
+                    </li>
+                </div>
+                <li class="layui-nav-item"><a href="/index">首页</a></li>
+                <li class="layui-nav-item"><a href="/index/info">介绍</a></li>
+            </ul>
+            <ul class="layui-nav layui-layout-right" style="background-color: black;">
+                <li class="layui-nav-item">
+                    <a href="/index/login">登录</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="/index/register">
+                        <button type="button" class="layui-btn" style="background-color: rgb(103, 69, 223);">注册</button>
+                    </a>
+                </li>
+                <li class="layui-nav-item">
+                    <img src="/static/images/lang-zh.png" width=25px>&nbsp;&nbsp;CNY
+                </li>
+            </ul>
+        </div>
+        <div class="layui-row" style="margin-top: 60px;">
+            <div class="layui-carousel" id="ID-carousel-demo-1">
+                <div carousel-item ">
+                <div><img src=" /static/images/t1.png"></div>
+                <div><img src="/static/images/t4.png" /></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row" style="margin-top: 60px;background-color: rgb(17, 8, 41);color: rgb(255, 255, 255, 0.9)">
+        <div style="text-align: center;">
+            <div>
+                <br>
+                <p>登录以查看更多功能</p>
+                <br>
+            </div>
+            <a href="/index/login">
+                <button type="button" class="layui-btn" style="background-color: rgb(103, 69, 223);">
+                    登录
+                </button>
+            </a>
+            <div class="botton_regster">
+                <br>
+                <p>没有账号? <a href="/index/register">注册</a>并免费加入ZHIYUN</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row" style="margin-top: 60px;color: rgb(255, 255, 255, 0.9);text-align: center;">
+        Copyright © 2024 ZHIYUN MIT Licensed<br>
+        保留所有权利。所有商标均为其在美国及其它国家/地区的各自持有者所有。所有的价格均已包含增值税（如适用）。<br><br><br><br>
+    </div>
+
+    <script src="/static/lib/layui-v2.6.3/layui.js"></script>
+    <script>
+        layui.use(function () {
+            var carousel = layui.carousel;
+            carousel.render({
+                elem: '#ID-carousel-demo-1',
+                width: 'auto',
+                height: '480',
+                anim: 'fade'
+            });
+        });
+    </script>
+</body>
+
+</html>

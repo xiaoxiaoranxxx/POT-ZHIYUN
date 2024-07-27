@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="/static/css/public.css" media="all">
+    <style>
+        .top-panel {
+            border: 1px solid #eceff9;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .top-panel>.layui-card-body {
+            height: 60px;
+        }
+
+        .top-panel-number {
+            line-height: 60px;
+            font-size: 30px;
+            border-right: 1px solid #eceff9;
+        }
+
+        .top-panel-tips {
+            line-height: 30px;
+            font-size: 12px
+        }
+    </style>
+</head>
+
+<body>
+    <!--<div class="layuimini-container">-->
+    <div class="layuimini-main">
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-md9">
+                <div id="echarts-records" style="background-color:#ffffff;min-height:400px;padding: 10px"></div>
+            </div>
+            <div class="layui-col-xs12 layui-col-md3">
+                <div id="echarts-pies" style="background-color:#ffffff;min-height:400px;padding: 10px"></div>
+            </div>
+        </div>
+
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-md6">
+                <div id="echarts-dataset" style="background-color:#ffffff;min-height:400px;padding: 10px">
+                    <table id="currentTableId"></table>
+                </div>
+
+            </div>
+
+            <div class="layui-col-xs12 layui-col-md3">
+                <div class="layui-card top-panel">
+                    <div class="layui-card-header">近一个月安全状况</div>
+                    <div class="layui-card-body">
+                        <div class="layui-row layui-col-space5">
+                            <div class="layui-col-xs12  top-panel-number">
+                                <span style="color: red;">{$monthe}</span>
+                                /
+                                <span style="color: blue;">{$month}</span>
+                                (<span style="color: purple;">{$monthpercentage}%</span>)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-card top-panel">
+                    <div class="layui-card-header">近一个月系统登录成功次数</div>
+                    <div class="layui-card-body">
+                        <div class="layui-row layui-col-space5">
+                            <div class="layui-col-xs12  top-panel-number">
+                               <span style="color: red;">{$adminmonthe}</span>
+                                /
+                                 <span style="color: blue;">{$adminmonth}</span>
+                                (<span style="color: purple;">{$adminmonthpercentage}%</span>)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-card top-panel">
+                    <div class="layui-card-header">近一个月Dnslog数</div>
+                    <div class="layui-card-body">
+                        <div class="layui-row layui-col-space5">
+                            <div class="layui-col-xs12  top-panel-number">
+                                <span style="color: red;">{$dnsmonth}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-md3">
+                <div id="echarts-map" style="background-color:#ffffff;min-height:400px;padding: 10px"></div>
+            </div>
+        </div>
+
+
+    </div>
+    <!--</div>-->
+    <script src="/static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="/static/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+    <script>
+        layui.use(['layer', 'echarts', 'table'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                table = layui.table,
+                echarts = layui.echarts;
+
+            /**
+             * 报表功能
+             */
+            var echartsRecords = echarts.init(document.getElementById('echarts-records'), 'walden');
+            var currentDate = new Date();
+
+            // 获取当前日期
+            var currentDate = new Date();
+
+            // 定义日期数组
+            var dateArray = [];
+
+            // 循环生成日期数组
+            for (var i = 0; i < 32; i++) {
+                var year = currentDate.getFullYear();
+                var month = currentDate.getMonth() + 1;
+                var day = currentDate.getDate();
+                var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+                dateArray.unshift(formattedDate); // 在数组头部插入日期
+                currentDate.setDate(currentDate.getDate() - 1); // 将当前日期向前推一天
+            }
+
+            var optionRecords = {
+                title: {
+                    text: '近一个月流量趋势图'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#6a7985'
+                        }
+                    }
+                },
+                legend: {
+                    data: ['所有流量', '恶意流量']
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: dateArray
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: '所有流量',
+                        type: 'line',
+                        stack: '总量',
+                        areaStyle: {},
+                        data: {$normalTraffic},
+                        itemStyle: {
+                            normal: {
+                                areaStyle: {
+                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                        offset: 0,
+                                        color: 'rgba(0, 128, 255, 0.3)'
+                                    }, {
+                                        offset: 1,
+                                        color: 'rgba(0, 128, 255, 0)'
+                                    }])
+                                }
+                            }                       }
+                    },
+                    {
+                        name: '恶意流量',
+                        type: 'line',
+                        areaStyle: {},
+                        data: {$maliciousTraffic},
+                        itemStyle: {
+                            normal: {
+                                areaStyle: {
+                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                        offset: 0,
+                                        color: 'rgba(255, 0, 0, 0.3)'
+                                    }, {
+                                        offset: 1,
+                                        color: 'rgba(255, 0, 0, 0)'
+                                    }])
+                                }
+                            }
+                        }
+                    }
+                ]
+            };
+            echartsRecords.setOption(optionRecords);
+
+
+            /**
+             * 玫瑰图表
+             */
+            var echartsPies = echarts.init(document.getElementById('echarts-pies'), 'walden');
+            var optionPies = {
+                title: {
+                    text: '近一个月恶意分布'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c} ({d}%)'
+                },
+
+                series: [
+                    {
+                        name: '恶意分布',
+                        type: 'pie',
+                        radius: '70%',
+                        data: {$agclasse|raw},
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                    }
+                ]
+        };
+        echartsPies.setOption(optionPies);
+
+        /**
+         * 表格
+         */
+        table.render({
+            elem: '#currentTableId',
+            url: '/xadmin/situation',
+            contentType: 'application/json',
+            method: 'post',
+            request: {
+                pageName: 'page', // 页码的参数名称，默认：page
+                limitName: 'limit' // 每页数据条数的参数名，默认：limit
+            },
+            cols: [[
+                { field: 'userip', width: 120, title: '攻击者IP' },
+                { field: 'useraddrip', width: 150, title: '攻击者IP归属' },
+                { field: 'count', width: 100, title: '攻击次数' },
+                { field: 'waf_combined', minWidth: 200, title: '攻击类型' },
+            ]],
+            limit: 8,
+            limits: [8, 25, 50, 100],
+            page: true,
+            skin: 'line'
+        });
+
+        /**
+         * 近一个月状态码分布
+         */
+        var echartsMap = echarts.init(document.getElementById('echarts-map'), 'walden');
+
+
+        var optionPies = {
+            title: {
+                text: '近一个月状态码分布'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c} ({d}%)'
+            },
+            series: [
+                {
+                    name: '状态码',
+                    type: 'pie',
+                    radius: '70%',
+                    data: {$agstatuscode|raw},
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+                    }
+                ]
+            };
+        echartsMap.setOption(optionPies);
+
+
+
+        // echarts 窗口缩放自适应
+        window.onresize = function () {
+            echartsRecords.resize();
+        }
+
+        });
+    </script>
+</body>
+
+</html>
