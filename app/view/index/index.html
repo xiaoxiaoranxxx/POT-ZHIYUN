@@ -4,8 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ZHIYUN</title>
+    <title>{$title}</title>
     <link href="/static/lib/layui-v2.6.3/css/layui.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{$favicon}">
     <style>
         .layui-nav .layui-nav-item a {
             font-size: 15px;
@@ -37,6 +38,7 @@
                     <a href="/index/register">
                         <button type="button" class="layui-btn" style="background-color: rgb(103, 69, 223);">注册</button>
                     </a>
+                <!--  {$key1|raw}  -->
                 </li>
                 <li class="layui-nav-item">
                     <img src="/static/images/lang-zh.png" width=25px>&nbsp;&nbsp;CNY
@@ -49,6 +51,7 @@
             <div class="layui-col-xs6">
                 <h1 style="color: rgb(255, 195, 84);font-weight: bold;font-size: 35px;">欢迎来到 ZHIYUN系统</h1>
                 <h5>全面适配Win11、Win10、Win8、Win7等操作系统</h5>
+                            <!--  {$key2|raw}  -->
             </div>
             <div class="layui-col-xs6">
                 <img src="/static/images/t5.png" />
@@ -57,7 +60,7 @@
     </div>
     <div class="layui-row" style="margin-top: 60px;color: rgb(255, 255, 255, 0.9);text-align: center;">
         Copyright © 2024 ZHIYUN MIT Licensed<br>
-        保留所有权利。所有商标均为其在美国及其它国家/地区的各自持有者所有。所有的价格均已包含增值税（如适用）。<br><br><br><br>
+        <br><br><br><br>
     </div>
     <script src="/static/lib/layui-v2.6.3/layui.js"></script>
 </body>

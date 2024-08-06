@@ -8,13 +8,14 @@ use app\middleware\CheckLogin;
 use think\facade\Session;
 use app\model\Admin;
 use app\model\AdminLog;
+use app\model\Key;
 use app\model\PotNtlm;
 use app\model\Logte;
 use app\model\PotUsersLog;
 use app\model\PotUsers;
+use think\facade\Cache;
 use app\model\PotMail;
 use app\model\PotUsersPhone;
-use app\model\PotShell;
 use app\model\LogteViewAgclasse;
 use app\model\LogteViewAgstatuscode;
 use app\model\LogteViewAgday;
@@ -32,6 +33,57 @@ class Xadmin extends BaseController
     public function index()
     {
         return View::fetch();
+    }
+
+    public function syskey()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = Key::listlog($post);
+            return json($list);
+        } else {
+            return View::fetch();
+        }
+    }
+
+    public function syskeyadd()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = Key::add($post);
+            return json($list);
+        } else {
+            return View::fetch();
+        }
+    }
+    public function syskeydel()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = Key::del($post);
+            return json($list);
+        } 
+    }
+
+    public function syskeyupdate()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = Key::updd($post);
+            return json($list);
+        }
+    }
+
+    public function syskeyedit()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = Key::syskeywhere($post);
+            return json($list);
+        } else {
+            View::assign('arr', Cache::get('syskeywhere'));
+            return View::fetch();
+        }
     }
 
     public function welcome()
@@ -206,16 +258,6 @@ class Xadmin extends BaseController
         }
     }
 
-    public function potshell()
-    {
-        if ($this->request->isJson()) {
-            $post = $this->request->param();
-            $list = PotShell::listlog($post);
-            return json($list);
-        } else {
-            return View::fetch();
-        }
-    }
 
     public function potsituation()
     {
@@ -333,6 +375,12 @@ class Xadmin extends BaseController
                     "title": "Dnslog日志",
                     "href": "dnslog",
                     "icon": "fa fa-coffee",
+                    "target": "_self"
+                },
+                {
+                    "title": "指纹KEY定义",
+                    "href": "syskey",
+                    "icon": "fa fa-bullseye",
                     "target": "_self"
                 },
                 {

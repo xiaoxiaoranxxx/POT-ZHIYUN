@@ -6,10 +6,10 @@ use think\facade\View;
 use app\BaseController;
 use think\facade\Session;
 use app\model\PotUsersPhone;
+use app\model\Key;
 use app\model\PotMail;
 use app\model\PotUsers;
 use app\model\PotNtlm;
-use app\model\PotShell;
 use think\facade\Request;
 
 
@@ -17,16 +17,13 @@ class Index extends BaseController
 {
     public function index()
     {
-        if ($this->request->isJson()) {
-            return;
-        } else {
-            return View::fetch();
-        }
-    }
+        $keyinfo = Key::getrandomstr();
+        View::assign('favicon', $keyinfo['favicon']);
+        View::assign('title', $keyinfo['title']);
+        View::assign('key1', $keyinfo['key1']);
+        View::assign('key2', $keyinfo['key2']);
 
-    public function download()
-    {
-        return download('static/lib/inst.exe', 'inst.exe')->mimeType('application/octet-stream');
+        return View::fetch();
     }
 
     public function info()

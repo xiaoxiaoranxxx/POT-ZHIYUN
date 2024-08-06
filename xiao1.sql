@@ -51,6 +51,34 @@ CREATE TABLE `cms_admin_log`  (
   INDEX `username`(`username`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
+
+
+-- ----------------------------
+-- Table structure for cms_key
+-- ----------------------------
+DROP TABLE IF EXISTS `cms_key`;
+CREATE TABLE `cms_key`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` datetime NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
+  `favicon` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
+  `key1` varchar(666) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
+  `key2` varchar(666) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
+  `status` enum('1','0') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cms_key
+-- ----------------------------
+INSERT INTO `cms_key` VALUES (3, '2024-08-07 00:54:17', 'grafana', 'Grafana', 'https://grafana.com/static/assets/img/fav32.png', 'grafana-app', '\'window.grafanabootdata = \'', '1');
+INSERT INTO `cms_key` VALUES (2, '2024-08-07 00:54:22', 'gitlab', '登录 · GitLab', 'https://about.gitlab.com/nuxt-images/ico/favicon-96x96.png', 'content=\"gitlab community edition\"\ngon.default_issues_tracker', '<a href=\"https://about.gitlab.com/\">about gitlab\nclass=\"col-sm-7 brand-holder pull-left\"\n\'content=\"gitlab \'', '1');
+INSERT INTO `cms_key` VALUES (1, '2024-08-05 14:10:54', '默认值', 'ZHIYUN', '/favicon.ico', '注释', '注释', '1');
+INSERT INTO `cms_key` VALUES (4, '2024-08-07 00:40:12', 'Nacos', 'Nacos', 'https://nacos.io/favicon.ico', '	<link rel=\"shortcut icon\" href=\"console-ui/public/img/nacos-logo.png\" type=\"image/x-icon\">\n', '	<script src=\"console-ui/public/js/codemirror.addone.json-lint.js\"></script>\n', '1');
+INSERT INTO `cms_key` VALUES (5, '2024-08-07 00:48:03', 'Jenkins', 'Jenkins', 'https://www.jenkins.io/favicon.ico', 'img id=\"jenkins-head-icon\" alt=\"title\" src=\"/static/63bf1834/images/jenkins-redbg.png\" ', '<body id=\"jenkins\" data-version=\"jenkins-1.573\" class=\"yui-skin-sam jenkins-1.573\">', '1');
+
+
 -- ----------------------------
 -- Table structure for pot_dnslog
 -- ----------------------------

@@ -252,7 +252,7 @@ sudo su -'
                 'patterns' => [
                     '/\.\.\/\.\.\//',
                     '/(?:etc\/\W*passwd)/i',
-                    '/(c\:|d\:|win.ini)/i',
+                    '/(win.ini)/i',
 
                 ],
                 'description' => '目录遍历',
