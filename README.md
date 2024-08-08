@@ -30,4 +30,4 @@
 
 # 软件安装
 
-见 /软件安装详情.md
+见 [/软件安装详情.md](https://github.com/xiaoxiaoranxxx/POT-ZHIYUN/blob/main/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85%E8%AF%A6%E6%83%85.md)
