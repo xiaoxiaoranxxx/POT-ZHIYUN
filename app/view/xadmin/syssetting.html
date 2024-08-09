@@ -1,1 +1,183 @@
-暂定
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/css/public.css" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layuimini-container">
+    <div class="layuimini-main" id="app">
+
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">网站首页设置</li>
+                <li>后台路径自定义</li>
+                <li>邮箱KEY配置</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form layuimini-form">
+
+                    <div class="layui-form-item" style="display: none;">
+                        <label class="layui-form-label">dataType</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="dataType" value="index">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label ">title1</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title1" placeholder="请输入title" value="{$arr[0]}" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label ">title2</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title2" placeholder="请输入title" value="{$arr[1]}" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">License信息</label>
+                        <div class="layui-input-block">
+                            <textarea name="License" class="layui-textarea" placeholder="请输入备注信息">{$arr[2]}</textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认提交</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+
+                <div class="layui-tab-item">
+                    <div class="layui-form layuimini-form">
+
+                    <div class="layui-form-item" style="display: none;">
+                        <label class="layui-form-label">dataType</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="dataType" value="syspath">
+                        </div>
+                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">path</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="path" placeholder="请输入path" value="{$arr[3]}" class="layui-input">
+                                <tip>该路径为系统后台登录的默认路由,修改后为系统的后台默认登录路径,请谨慎修改。</tip>
+                                <tip>修改成功后下次登录时生效</tip>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layui-tab-item">
+                    <div class="layui-form layuimini-form">
+
+                    <div class="layui-form-item" style="display: none;">
+                        <label class="layui-form-label">dataType</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="dataType" value="mail">
+                        </div>
+                    </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">邮箱服务端</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="server" placeholder="请输入" value="{$arr[4]}" class="layui-input">
+                            </div>
+                        </div>
+                         <div class="layui-form-item">
+                            <label class="layui-form-label">邮箱用户名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="username" placeholder="请输入" value="{$arr[5]}" class="layui-input">
+                            </div>
+                        </div>
+                         <div class="layui-form-item">
+                            <label class="layui-form-label">邮箱密码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="password" placeholder="请输入" value="{$arr[6]}" class="layui-input">
+                            </div>
+                        </div>
+                         <div class="layui-form-item">
+                            <label class="layui-form-label">邮箱服务端口号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="port" placeholder="请输入" value="{$arr[7]}" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<script src="/static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            data = data.field;
+            $.ajax({
+                url: "/xadmin/syssetting",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: 'json',
+                success: function (data) {
+                    layer.alert(data.msg, {
+                    title: '提交结果'
+                    }, function () {
+                        layer.closeAll();
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        // location.reload();
+                    });
+                }, error: function (data) {
+                    layer.msg("未知错误,添加失败");
+                }
+
+            
+            })
+
+            return false;
+        });
+
+
+
+
+
+
+    });
+</script>
+</body>
+</html>

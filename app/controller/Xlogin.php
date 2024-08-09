@@ -6,7 +6,7 @@ use app\BaseController;
 use think\facade\View;
 use think\facade\Session;
 use app\model\Admin;
-use app\model\PotNtlm;
+use app\model\Sysinfo;
 
 class Xlogin extends BaseController
 {
@@ -26,6 +26,7 @@ class Xlogin extends BaseController
                 return json($rt);
             }
         } else {
+            View::assign('arr', Sysinfo::getlist()[3]);
             return View::fetch();
         }
     }

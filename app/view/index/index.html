@@ -19,7 +19,7 @@
 <body style="background-color: rgb(17, 8, 37);">
     <div class="layui-container">
         <div class="layui-row">
-            <ul class="layui-nav" style="background-color: rgb(17, 8, 37);;">
+            <ul class="layui-nav" style="background-color: rgb(17, 8, 37);">
                 <div class="layui-col-sm5">
                     <li class="layui-nav-item">
                         <a href="/">
@@ -49,8 +49,8 @@
         <div class="layui-row"
             style="margin-top: 60px;  display: flex;color: rgb(255, 255, 255, 0.9);justify-content: center;align-items: center;text-align: center;min-height:480px;padding: 10px">
             <div class="layui-col-xs6">
-                <h1 style="color: rgb(255, 195, 84);font-weight: bold;font-size: 35px;">欢迎来到 ZHIYUN系统</h1>
-                <h5>全面适配Win11、Win10、Win8、Win7等操作系统</h5>
+                <h1 style="color: rgb(255, 195, 84);font-weight: bold;font-size: 35px;">{$arr[0]}</h1>
+                <h5>{$arr[1]}</h5>
                             <!--  {$key2|raw}  -->
             </div>
             <div class="layui-col-xs6">
@@ -59,7 +59,7 @@
         </div>
     </div>
     <div class="layui-row" style="margin-top: 60px;color: rgb(255, 255, 255, 0.9);text-align: center;">
-        Copyright © 2024 ZHIYUN MIT Licensed<br>
+        {$arr[2]}<br>
         <br><br><br><br>
     </div>
     <script src="/static/lib/layui-v2.6.3/layui.js"></script>

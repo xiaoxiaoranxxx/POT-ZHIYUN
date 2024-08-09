@@ -7,17 +7,17 @@ use think\Model;
 use think\exception\ValidateException;
 use app\validate\MailValidate;
 use think\facade\Cache;
-use think\facade\Env;
+use app\model\Sysinfo;
 
 class PotMail extends Model
 {
     protected $name = 'pot_mail';
     protected $pk = 'id';
-
-
+    
     public static function sendmail($params)
     {
 
+        $sysinfo=Sysinfo::getlist();
         if (Cache::get($params['email'])) {
             return ['error' => 1, "msg" => '已正确发送验证码,请2分钟后再试'];
         }
@@ -30,23 +30,23 @@ class PotMail extends Model
             // 编码格式为utf8，不设置编码的话，中文会出现乱码
             $mail->CharSet = "utf8";
             // 发送人的SMTP服务器地址（QQ邮箱就是“smtp.qq.com”）
-            $mail->Host = Env::get('mailer.host');
+            $mail->Host = $sysinfo[4];
             // 是否使用身份验证
             $mail->SMTPAuth = true;
             // 发送人的邮箱用户名，就是你自己的SMTP服务使用的邮箱
-            $mail->Username = Env::get('mailer.username');
+            $mail->Username = $sysinfo[5];
             // 发送方的邮箱密码，注意这里填写的是“客户端授权密码”而不是邮箱的登录密码！
-            $mail->Password = Env::get('mailer.password');
+            $mail->Password = $sysinfo[6];
             // 使用ssl协议方式
             $mail->SMTPSecure = "ssl";
             //ssl协议方式端口号是465
-            $mail->Port = Env::get('mailer.port');
+            $mail->Port = $sysinfo[7];
             // 设置发件人信息，如邮件格式说明中的发件人，这里会显示为  Mailer(xxx@qq.com）
-            $mail->setFrom(Env::get('mailer.username'), "企业验证码");
+            $mail->setFrom($sysinfo[5], "企业验证码");
             // 设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
             $mail->addAddress($toemail);
             // 设置回复人信息，指的是收件人收到邮件后，如果要回复，回复邮件将发送到的邮箱地址
-            $mail->addReplyTo(Env::get('mailer.username'), "企业验证码");
+            $mail->addReplyTo($sysinfo[5], "企业验证码");
             // 邮件标题
             $mail->Subject = "账户电子邮件验证";
 

@@ -161,6 +161,8 @@ CREATE TABLE `pot_users`  (
   INDEX `username`(`username`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
+INSERT INTO `pot_users` (`id`, `username`, `password`, `lastloginip`, `lastloginipaddr`, `lastlogintime`, `email`, `count`) VALUES (1, 'admin', '123456', '127.0.0.1', '本机地址', '2024-07-01 15:42:05', '123@qq.com', 0);
+
 -- ----------------------------
 -- Table structure for pot_users_log
 -- ----------------------------
@@ -190,6 +192,30 @@ CREATE TABLE `pot_users_phone`  (
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for cms_sysinfo
+-- ----------------------------
+DROP TABLE IF EXISTS `cms_sysinfo`;
+CREATE TABLE `cms_sysinfo`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `key` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
+  `value` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cms_sysinfo
+-- ----------------------------
+INSERT INTO `cms_sysinfo` VALUES (1, '2024-08-09 19:26:09', 'title1', '欢迎来到ZHIYUN系统');
+INSERT INTO `cms_sysinfo` VALUES (2, '2024-08-09 13:29:05', 'title2', '全面适配Win11、Win10、Win8、Win7等操作系统');
+INSERT INTO `cms_sysinfo` VALUES (3, '2024-08-09 19:26:45', 'License', 'Copyright © 2024 ZHIYUN MIT Licensed\n');
+INSERT INTO `cms_sysinfo` VALUES (4, '2024-08-09 20:07:27', 'syspath', '/xlogin/login');
+INSERT INTO `cms_sysinfo` VALUES (5, '2024-08-09 19:18:59', 'mailhost', 'smtp.qq.com');
+INSERT INTO `cms_sysinfo` VALUES (6, '2024-08-09 20:06:41', 'username', 'xxxxxx@qq.com');
+INSERT INTO `cms_sysinfo` VALUES (7, '2024-08-09 20:06:41', 'password', 'xxxxxxxxxxxxxxx');
+INSERT INTO `cms_sysinfo` VALUES (8, '2024-08-09 16:04:14', 'port', '465');
 
 -- ----------------------------
 -- View structure for agclasse

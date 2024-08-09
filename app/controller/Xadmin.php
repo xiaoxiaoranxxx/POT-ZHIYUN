@@ -11,6 +11,7 @@ use app\model\AdminLog;
 use app\model\Key;
 use app\model\PotNtlm;
 use app\model\Logte;
+use app\model\Sysinfo;
 use app\model\PotUsersLog;
 use app\model\PotUsers;
 use think\facade\Cache;
@@ -34,6 +35,17 @@ class Xadmin extends BaseController
     {
         return View::fetch();
     }
+
+    // public function sysinfo()
+    // {
+    //     if ($this->request->isJson()) {
+    //         $post = $this->request->param();
+    //         $list = Key::listlog($post);
+    //         return json($list);
+    //     } else {
+    //         return View::fetch();
+    //     }
+    // }
 
     public function syskey()
     {
@@ -165,8 +177,11 @@ class Xadmin extends BaseController
     public function syssetting()
     {
         if ($this->request->isJson()) {
-            //暂定
+            $post = $this->request->param();
+            $list = Sysinfo::updatelist($post);
+            return json($list);
         } else {
+            View::assign('arr', Sysinfo::getlist());
             return View::fetch();
         }
     }
@@ -387,6 +402,12 @@ class Xadmin extends BaseController
                     "title": "蜜罐流量分析",
                     "href": "logtelog",
                     "icon": "fa fa-user-secret",
+                    "target": "_self"
+                },
+                {
+                    "title": "系统信息配置",
+                    "href": "syssetting",
+                    "icon": "fa fa-cog",
                     "target": "_self"
                 }
             ]

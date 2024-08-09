@@ -171,7 +171,7 @@ sudo su -'
         }
 
         // sql注入    // 触发条件必须在cookies中或post中
-        $pattern = '/\b(?:extractvalue|updawwwwwwtexml)\b.*(?:concat).*?(?:md5\((.*?)\))/';
+        $pattern = '/\b(?:extractvalue|updatexml)\b.*(?:concat).*?(?:md5\((.*?)\))/';
         if (preg_match($pattern, urldecode($requestContent .= isset($requestHeaders['cookie']) ? $requestHeaders['cookie'] : ''), $matches)) {
             $response->content('{"success":true,"error":0,"msg":"PATH syntax error: \'~' . md5($matches[1]) . '\'"}');
             $response = $response->code(200);

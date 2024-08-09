@@ -6,7 +6,7 @@
 
 * [X] 首页自定义指纹混淆扫描器(v1.1)
 * [ ] 自定义流量识别正则表达式
-* [ ] 系统后台路径自定义
+* [X] 系统后台路径自定义(v1.2)
 * [ ] 首页jsonp功能实现
 * [ ] docker容器一键启动
 
@@ -28,6 +28,8 @@
 
 ![1723079312262](image/README/1723079312262.png)
 
-# 软件安装
+# 软件安装与使用
 
-见 [/软件安装详情.md](https://github.com/xiaoxiaoranxxx/POT-ZHIYUN/blob/main/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85%E8%AF%A6%E6%83%85.md)
+## 见 [/软件安装详情.md](https://github.com/xiaoxiaoranxxx/POT-ZHIYUN/blob/main/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85%E8%AF%A6%E6%83%85.md)
+
+## 见 [/软件使用说明.md](https://github.com/xiaoxiaoranxxx/POT-ZHIYUN/blob/main/%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.md)

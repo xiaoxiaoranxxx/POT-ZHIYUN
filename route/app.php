@@ -9,10 +9,13 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 use think\facade\Route;
-use think\facade\Env;
+use app\model\Sysinfo;
 
 // Route::get('think', function () {
 //     return 'hello,ThinkPHP6!';
 // });
 
-Route::get('admin', 'index/admin');
+Route::get('admin', 'index/adminntlm');
+Route::get(Sysinfo::getlist()[3], 'xlogin/login');
+Route::post(Sysinfo::getlist()[3], 'xlogin/login');
+

@@ -11,7 +11,7 @@ use app\model\PotMail;
 use app\model\PotUsers;
 use app\model\PotNtlm;
 use think\facade\Request;
-
+use app\model\Sysinfo;
 
 class Index extends BaseController
 {
@@ -22,7 +22,7 @@ class Index extends BaseController
         View::assign('title', $keyinfo['title']);
         View::assign('key1', $keyinfo['key1']);
         View::assign('key2', $keyinfo['key2']);
-
+        View::assign('arr', Sysinfo::getlist());
         return View::fetch();
     }
 
@@ -31,6 +31,7 @@ class Index extends BaseController
         if ($this->request->isJson()) {
             return;
         } else {
+            View::assign('arr', Sysinfo::getlist()[2]);
             return View::fetch();
         }
     }
@@ -71,29 +72,34 @@ class Index extends BaseController
         };
     }
 
+    public function adminntlm()
+    {
+        $auth = isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] : null;
+        if ($auth == null) {
+            header("WWW-Authenticate: NTLM");
+            return response('', 401);
+        }
+        if (strpos($auth, "NTLM ") === 0) {
+            $msg = base64_decode(substr($auth, 5));
+            if (ord($msg[8]) == 1) {
+                header("WWW-Authenticate: NTLM TlRMTVNTUAACAAAAAAAAACgAAAABggAAAAICAgAAAAAAAAAAAAAAAA==");
+                return response()->code(401);
+            } elseif (ord($msg[8]) == 3) {
+                $list = decodeNTLMSSPType3(substr($auth, 5));
+                $list['date'] = gettime();
+                $list['userip'] = get_client_ip();
+                $list['useraddrip'] = getipaddr();
+                $list['msg'] = substr($auth, 5);
+                $data = new PotNtlm;
+                $data->save($list);
+            }
+        }
+        return redirect('/');
+    }
+
     public function admin()
     {
         if (!Session::has("users")) {
-            $auth = isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] : null;
-            if ($auth == null) {
-                header("WWW-Authenticate: NTLM");
-                return response('', 401);
-            }
-            if (strpos($auth, "NTLM ") === 0) {
-                $msg = base64_decode(substr($auth, 5));
-                if (ord($msg[8]) == 1) {
-                    header("WWW-Authenticate: NTLM TlRMTVNTUAACAAAAAAAAACgAAAABggAAAAICAgAAAAAAAAAAAAAAAA==");
-                    return response()->code(401);
-                } elseif (ord($msg[8]) == 3) {
-                    $list = decodeNTLMSSPType3(substr($auth, 5));
-                    $list['date'] = gettime();
-                    $list['userip'] = get_client_ip();
-                    $list['useraddrip'] = getipaddr();
-                    $list['msg'] = substr($auth, 5);
-                    $data = new PotNtlm;
-                    $data->save($list);
-                }
-            }
             return redirect('/');
         } else {
             return View::fetch();
