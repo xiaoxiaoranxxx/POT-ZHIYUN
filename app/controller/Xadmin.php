@@ -24,6 +24,9 @@ use app\model\LogteViewAgmothe;
 use app\model\PotViewAgcount;
 use app\model\PotViewAgpot;
 use app\model\PotDnslog;
+use app\model\NodeView;
+use app\model\Node;
+use app\model\NodeRe;
 
 class Xadmin extends BaseController
 {
@@ -36,16 +39,66 @@ class Xadmin extends BaseController
         return View::fetch();
     }
 
-    // public function sysinfo()
-    // {
-    //     if ($this->request->isJson()) {
-    //         $post = $this->request->param();
-    //         $list = Key::listlog($post);
-    //         return json($list);
-    //     } else {
-    //         return View::fetch();
-    //     }
-    // }
+    public function rekey()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = NodeView::listlog($post);
+            return json($list);
+        } else {
+            return View::fetch();
+        }
+    }
+    public function rekeyadd()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            if ($post['dataType'] === "node") {
+                $list = Node::add($post);
+            } else if ($post['dataType'] === "re") {
+                $list = NodeRe::add($post);
+            } else if ($post['dataType'] === "del") {
+                $list = Node::del($post);
+            } else {
+                $list = ['error' => 1, "msg" => '未知错误'];
+            }
+            return json($list);
+        } else {
+            View::assign('rearr', json_encode(Node::getlist()));
+            return View::fetch();
+        }
+    }
+
+    public function rekeydel()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = NodeRe::del($post);
+            return json($list);
+        }
+    }
+
+    public function rekeyedit()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = NodeRe::rekeywhere($post);
+            return json($list);
+        } else {
+            View::assign('arr', Cache::get('rekeywhere'));
+            return View::fetch();
+        }
+    }
+
+    public function rekeyupdate()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = NodeRe::updd($post);
+            return json($list);
+        }
+    }
+
 
     public function syskey()
     {
@@ -74,7 +127,7 @@ class Xadmin extends BaseController
             $post = $this->request->param();
             $list = Key::del($post);
             return json($list);
-        } 
+        }
     }
 
     public function syskeyupdate()
@@ -204,6 +257,7 @@ class Xadmin extends BaseController
             $list = Logte::listlog($post);
             return json($list);
         } else {
+            View::assign('arr', json_encode(Node::getlist()));
             return View::fetch();
         }
     }
@@ -228,6 +282,7 @@ class Xadmin extends BaseController
             return json($list);
         } else {
             View::assign('update', Session::pull('update'));
+            View::assign('arr', json_encode(Node::getlist()));
             return View::fetch();
         }
     }
@@ -297,16 +352,21 @@ class Xadmin extends BaseController
         } else {
             $list = LogteViewAgclasse::listlog();
             $filteredResults = [];
+            $counter = 0;
             foreach ($list as $item) {
                 $waf = $item['waf'];
                 $count = $item['count'];
                 // 去掉为空或带分号的项
-                if ($waf === null || strpos($waf, ';') !== false)
+                if ($waf === null)
                     continue;
                 $filteredResults[] = [
                     'value' => $count,
                     'name' => $waf
                 ];
+                $counter++;
+                if ($counter >= 12) {
+                    break; 
+                }
             }
             View::assign('agclasse', json_encode($filteredResults));
             View::assign('agstatuscode', json_encode(LogteViewAgstatuscode::listlog()));
@@ -396,6 +456,12 @@ class Xadmin extends BaseController
                     "title": "指纹KEY定义",
                     "href": "syskey",
                     "icon": "fa fa-bullseye",
+                    "target": "_self"
+                },
+                {
+                    "title": "流量re值定义",
+                    "href": "rekey",
+                    "icon": "fa fa-anchor",
                     "target": "_self"
                 },
                 {

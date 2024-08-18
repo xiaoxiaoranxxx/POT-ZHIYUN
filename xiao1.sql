@@ -52,6 +52,70 @@ CREATE TABLE `cms_admin_log`  (
 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 
+-- ----------------------------
+-- Table structure for cms_node
+-- ----------------------------
+DROP TABLE IF EXISTS `cms_node`;
+CREATE TABLE `cms_node`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cms_node
+-- ----------------------------
+INSERT INTO `cms_node` VALUES (1, 'SQL注入');
+INSERT INTO `cms_node` VALUES (2, '流协议攻击');
+INSERT INTO `cms_node` VALUES (3, '目录遍历');
+INSERT INTO `cms_node` VALUES (4, '命令执行');
+INSERT INTO `cms_node` VALUES (5, 'XSS攻击');
+INSERT INTO `cms_node` VALUES (6, '扫描器探测');
+INSERT INTO `cms_node` VALUES (7, '敏感文件获取');
+INSERT INTO `cms_node` VALUES (8, '收藏');
+INSERT INTO `cms_node` VALUES (9, '误报');
+INSERT INTO `cms_node` VALUES (10, '测试样例');
+
+
+-- ----------------------------
+-- Table structure for cms_re
+-- ----------------------------
+DROP TABLE IF EXISTS `cms_re`;
+CREATE TABLE `cms_re`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `node` int(11) NULL DEFAULT NULL,
+  `key` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
+  `status` int(1) NULL DEFAULT NULL,
+  `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `test`(`node`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cms_re
+-- ----------------------------
+INSERT INTO `cms_re` VALUES (1, 1, '/(?:(union(.*?)select))/i', 1, NULL);
+INSERT INTO `cms_re` VALUES (2, 1, '/\\s+(or|xor|and)\\s+.*(?:=|<|>|\\\'|\")/', 1, NULL);
+INSERT INTO `cms_re` VALUES (3, 1, '/sleep\\((\\s*)(\\d*)(\\s*)\\)/', 1, NULL);
+INSERT INTO `cms_re` VALUES (4, 1, '/(?:from\\W+information_schema\\W)/i', 1, NULL);
+INSERT INTO `cms_re` VALUES (5, 1, '/(database|schema|connection_id|group_|substr|updatexml|or\\\'|\\\'or|extractvalue|order|waitfor|column_name|concat)/i', 1, NULL);
+INSERT INTO `cms_re` VALUES (6, 2, '/(gopher|doc|php|glob|file|phar|zlib|ftp|ldap|dict|ogg|data):\\/\\//i', 1, NULL);
+INSERT INTO `cms_re` VALUES (7, 3, '/\\.\\.\\/\\.\\.\\//', 1, NULL);
+INSERT INTO `cms_re` VALUES (8, 3, '/(?:etc\\/\\W*passwd)/i', 1, NULL);
+INSERT INTO `cms_re` VALUES (9, 3, '/(win.ini)/i', 1, NULL);
+INSERT INTO `cms_re` VALUES (10, 4, '/(cmd|base64|shell|eval|whoami|system|\\$_|proc_|socket_|posix_|stream_|assert|phpinfo|exec|preg_|file_|passt|preg_r|show_|call_user)/i', 1, NULL);
+INSERT INTO `cms_re` VALUES (11, 4, '/(print_r|include|passthru|var_dump|call_user_func_array|ipconfig|ifconfig|runtime|invokefunction|construct)/i', 1, NULL);
+INSERT INTO `cms_re` VALUES (12, 5, '/<(iframe|script|body|img|layer|div|meta|style|base|object|input)/i', 1, NULL);
+INSERT INTO `cms_re` VALUES (13, 5, '/(onmouseover|onerror|onload)=/i', 1, NULL);
+INSERT INTO `cms_re` VALUES (14, 6, '/(HTTrack|Apache-HttpClient|harvest|audit|dirbuster|pangolin|nmap|sqln|hydra|Parser|libwww|BBBike|sqlmap|w3af|owasp|Nikto|fimap|havij|zmeu|BabyKrokodil|netsparker|httperf| SF)/i', 1, '');
+INSERT INTO `cms_re` VALUES (15, 6, '/(acunetix-wvs-test-for-some-inexistent-file|acunetix_wvs_security_test|AppScan|XSS@HERE|Acunetix-Aspect|Acunetix-Aspect-Password|Acunetix-Aspect-Queries|X-WIPP|X-RequestManager-Memo|X-Request-Memo)/i', 1, NULL);
+INSERT INTO `cms_re` VALUES (16, 7, '/(vhost|bbs|host|wwwroot|www|site|root|backup|data|ftp|db|admin|website|web).*\\.(rar|sql|zip|tar\\.gz|tar)/', 1, NULL);
+INSERT INTO `cms_re` VALUES (17, 7, '/\\.(htaccess|mysql_history|bash_history|DS_Store|idea|user\\.ini)/i', 1, NULL);
+INSERT INTO `cms_re` VALUES (18, 10, '~\\d+~', 0, '匹配请求报文中的所有数字');
+INSERT INTO `cms_re` VALUES (19, 10, '~测试数据~', 0, '匹配流量中所有含有\"测试数据\"的,谨慎添加');
+INSERT INTO `cms_re` VALUES (20, 10, '~webshell~i', 0, '匹配含有webshell的字段,i为不区分大小写');
+
+
 
 -- ----------------------------
 -- Table structure for cms_key
@@ -252,6 +316,12 @@ CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `agpot` AS with `recent_d
 -- ----------------------------
 DROP VIEW IF EXISTS `agstatuscode`;
 CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `agstatuscode` AS select `pot_logte`.`statuscode` AS `name`,count(0) AS `value` from `pot_logte` where (`pot_logte`.`date` >= (now() - interval 1 month)) group by `pot_logte`.`statuscode` order by `name` desc;
+
+-- ----------------------------
+-- View structure for wafmatch
+-- ----------------------------
+DROP VIEW IF EXISTS `wafmatch`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `wafmatch` AS select `cms_node`.`id` AS `id`,`cms_node`.`name` AS `name`,`cms_re`.`id` AS `re_id`,`cms_re`.`key` AS `key`,`cms_re`.`status` AS `status`,`cms_re`.`remark` AS `remark` from (`cms_node` join `cms_re` on((`cms_node`.`id` = `cms_re`.`node`)));
 
 SET FOREIGN_KEY_CHECKS = 1;
 

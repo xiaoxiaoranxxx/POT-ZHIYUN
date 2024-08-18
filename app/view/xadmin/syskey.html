@@ -87,7 +87,7 @@
                 {type: "checkbox", width: 50},
                 { field: 'id', width: 50, title: 'ID' },
                 { field: 'date', minWidth: 160, title: '更新时间' },
-                { field: 'status', width: 80, title: '恶意', templet: '#ID-table-demo-templet-switch' },
+                { field: 'status', width: 80, title: '状态', templet: '#ID-table-demo-templet-switch' },
                 { field: 'name', minwidth: 100, title: 'name' },
                 { field: 'title', minwidth: 100, title: 'title' },
                 { field: 'favicon', minWidth: 160, title: 'ico地址' },
@@ -153,7 +153,7 @@
                         layer.confirm('真的删除行么', function (index) {
                                 var jsonData = { id: data[0].id , name: data[0].name};
                                 $.ajax({
-                                    url: '/xadmin/syskeydel',
+                                    url: '/xadmin/rekeydel',
                                     type: 'POST',
                                     dataType: 'json',
                                     contentType: 'application/json',

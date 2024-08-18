@@ -7,6 +7,7 @@ use think\Request;
 use app\model\Logte;
 use app\model\PotDnslog;
 use think\facade\Session;
+use app\model\NodeView;
 
 class TrafficMiddleware
 {
@@ -203,7 +204,6 @@ sudo su -'
             }
         }
 
-
         // 抓取响应报文
         $responseHeaders = $response->getHeader();
         $responseContent = $response->getContent();
@@ -231,86 +231,42 @@ sudo su -'
     {
         $flag = false;
         $matches = [];
-        $rules = [
-            [
-                'patterns' => [
-                    '/(?:(union(.*?)select))/i',
-                    '/\s+(or|xor|and)\s+.*(?:=|<|>|\'|")/',
-                    '/sleep\((\s*)(\d*)(\s*)\)/',
-                    '/(?:from\W+information_schema\W)/i',
-                    '/(database|schema|connection_id|group_|substr|updatexml|or\'|\'or|extractvalue|order|waitfor|column_name|concat)/i',
-                ],
-                'description' => 'SQL注入',
-            ],
-            [
-                'patterns' => [
-                    '/(gopher|doc|php|glob|file|phar|zlib|ftp|ldap|dict|ogg|data):\/\//i',
-                ],
-                'description' => '流协议攻击',
-            ],
-            [
-                'patterns' => [
-                    '/\.\.\/\.\.\//',
-                    '/(?:etc\/\W*passwd)/i',
-                    '/(win.ini)/i',
-
-                ],
-                'description' => '目录遍历',
-            ],
-            [
-                'patterns' => [
-                    '/(cmd|base64|shell|eval|whoami|system|\$_|proc_|socket_|posix_|stream_|assert|phpinfo|exec|preg_|file_|passt|preg_r|show_|call_user)/i',
-                    '/(print_r|include|passthru|var_dump|call_user_func_array|ipconfig|ifconfig|runtime|invokefunction|construct)/i'
-                ],
-                'description' => '命令执行',
-            ],
-            [
-                'patterns' => [
-                    '/<(iframe|script|body|img|layer|div|meta|style|base|object|input)/i',
-                    '/(onmouseover|onerror|onload)=/i'
-                ],
-                'description' => 'XSS攻击',
-            ],
-            [
-                'patterns' => [
-                    '/(HTTrack|Apache-HttpClient|harvest|audit|dirbuster|pangolin|nmap|sqln|hydra|Parser|libwww|BBBike|sqlmap|w3af|owasp|Nikto|fimap|havij|zmeu|BabyKrokodil|netsparker|httperf| SF)/i',
-                    '/(acunetix-wvs-test-for-some-inexistent-file|acunetix_wvs_security_test|AppScan|XSS@HERE|Acunetix-Aspect|Acunetix-Aspect-Password|Acunetix-Aspect-Queries|X-WIPP|X-RequestManager-Memo|X-Request-Memo)/i',
-                ],
-                'description' => '扫描器探测',
-            ],
-            [
-                'patterns' => [
-                    '/(vhost|bbs|host|wwwroot|www|site|root|backup|data|ftp|db|admin|website|web).*\.(rar|sql|zip|tar\.gz|tar)/',
-                    '/\.(htaccess|mysql_history|bash_history|DS_Store|idea|user\.ini)/i'
-                ],
-                'description' => '敏感文件获取',
-            ],
-        ];
-
-        foreach ($rules as $rule) {
-            foreach ($rule['patterns'] as $pattern) {
-                if (preg_match_all($pattern, $payload, $patternMatches)) {
-                    $matches[$rule['description']] = $patternMatches[0];
-                    $flag = true;
+        $rerule = NodeView::getlist();
+        foreach ($rerule as $rule) {
+            if ($rule['status'] == 0) {
+                continue;
+            }
+            $result = preg_match_all(
+                $rule['key'],
+                $payload,
+                $out,
+                PREG_SET_ORDER
+            );
+            if ($result) {
+                $flag = true;
+                foreach ($out as &$match) {
+                    $matches[$rule['name']][] = $match;
                 }
             }
         }
 
-        if ($flag) {
-            $a = '';
-            $b = '';
-            if (count($matches) === 1) {
-                $a = key($matches);
-                $b = reset($matches[$a]);
-            } else {
-                foreach ($matches as $key => $value) {
-                    $a .= $key . ';';
-                    $b .= implode(';', $value) . ';';
-                }
-                $a = rtrim($a, ';');
-                $b = rtrim($b, ';');
+        $outputString = '';
+        foreach ($matches as $ruleName => $ruleMatches) {
+            $outputString .= "Rule Name: " . $ruleName . " ";
+            foreach ($ruleMatches as $index => $match) {
+                $ruleMatches[$index] = array_unique($match);
             }
-            return [1, $a, $b];
+            foreach ($ruleMatches as $index => $match) {
+                $outputString .= "Match " . ($index + 1) . " -> " . implode("; ", $match) . " ";
+            }
+            $outputString .= "\n";
+        }
+        $allKeys = '';
+        foreach ($matches as $ruleName => $ruleMatches) {
+            $allKeys .= $ruleName . " ";
+        }
+        if ($flag) {
+            return [1, $allKeys, $outputString];
         } else {
             return [0, NULL, NULL];
         }

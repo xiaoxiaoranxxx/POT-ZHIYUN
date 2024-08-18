@@ -62,7 +62,7 @@ class Logte extends Model
     }
     public static function getmontheconut()
     {
-        return  self::whereBetweenTime('date',strtotime('-31 days'), date('Y-m-d H:i:s'))->where('wafstatus', 1)->count();
+        return  self::whereBetweenTime('date', strtotime('-31 days'), date('Y-m-d H:i:s'))->where('wafstatus', 1)->count();
     }
 
     public static function listlog($params)
@@ -140,7 +140,7 @@ class Logte extends Model
     public function searchUseraddripAttr($query, $value, $data)
     {
         if (!empty($value)) {
-            $query->where('useraddrip', 'like', $value . '%');
+            $query->where('useraddrip', 'like', '%' . $value . '%');
         }
     }
 
@@ -175,7 +175,7 @@ class Logte extends Model
     public function searchWafAttr($query, $value, $data)
     {
         if (!empty($value)) {
-            $query->where('waf', 'like', $value . '%');
+            $query->where('waf', 'like', '%' . $value . '%');
         }
     }
 }

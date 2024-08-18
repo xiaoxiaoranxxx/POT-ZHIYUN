@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/css/public.css" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layuimini-container">
+    <div class="layuimini-main" id="app">
+
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">流量分类标签正则表达式</li>
+                <li>流量分类标签添加</li>
+                <li>流量分类标签删除</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form layuimini-form">
+
+                    <div class="layui-form-item" style="display: none;">
+                        <label class="layui-form-label">dataType</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="dataType" value="re">
+                        </div>
+                    </div>
+
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">正则标签归属</label>
+                        <div class="layui-input-block" id="options"></div>
+                    </div>
+
+                        <div class="layui-form-item">
+                        <label class="layui-form-label required">是否启用</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="status" value="1" title="是" checked >
+                            <input type="radio" name="status" value="0" title="否" >
+                        </div>
+                        </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label ">re</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="revalue" placeholder="请输入正则表达式" value="~~" class="layui-input">
+                            <tip>系统使用preg_match_all函数进行全局匹配</tip><br>
+                            <tip>正则使用需要添加定界符(如~,#,/)来包围正则表达式</tip><br>
+                            <tip>正则测试网站 https://regex101.com/</tip><br>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">备注信息</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="remark" placeholder="请输入备注信息" value="" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认提交</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+
+                <div class="layui-tab-item">
+                    <div class="layui-form layuimini-form">
+
+                    <div class="layui-form-item" style="display: none;">
+                        <label class="layui-form-label">dataType</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="dataType" value="node">
+                        </div>
+                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">分类名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="path" placeholder="请输入分类名" value="" class="layui-input">
+                                <tip>流量分类标签添加。</tip>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+               <div class="layui-tab-item">
+                    <div class="layui-form layuimini-form">
+
+                    <div class="layui-form-item" style="display: none;">
+                        <label class="layui-form-label">dataType</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="dataType" value="del">
+                        </div>
+                    </div>
+
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">删除</label>
+                        <div class="layui-input-block" id="options1"></div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认提交</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<script src="/static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        var form = layui.form;
+
+        // 模拟数据
+        var data = {
+            "options": {$rearr|raw}
+        };
+
+        var html = '<select name="interest">';
+        layui.each(data.options, function(index, item) {
+            html += '<option value="' + item.id + '">' + item.name + '</option>';
+        });
+        html+="</select>";
+        $('#options').html(html);
+        $('#options1').html(html);
+        form.render(); 
+
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            data = data.field;
+            $.ajax({
+                url: "/xadmin/rekeyadd",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: 'json',
+                success: function (data) {
+                    layer.alert(data.msg, {
+                    title: '提交结果'
+                    }, function () {
+                        layer.closeAll();
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        parent.location.reload();
+                    });
+                }, error: function (data) {
+                    layer.msg("未知错误,添加失败");
+                }
+            
+            })
+
+            return false;
+        });
+
+
+
+
+
+
+    });
+</script>
+</body>
+</html>
