@@ -103,7 +103,7 @@ INSERT INTO `cms_re` VALUES (6, 2, '/(gopher|doc|php|glob|file|phar|zlib|ftp|lda
 INSERT INTO `cms_re` VALUES (7, 3, '/\\.\\.\\/\\.\\.\\//', 1, NULL);
 INSERT INTO `cms_re` VALUES (8, 3, '/(?:etc\\/\\W*passwd)/i', 1, NULL);
 INSERT INTO `cms_re` VALUES (9, 3, '/(win.ini)/i', 1, NULL);
-INSERT INTO `cms_re` VALUES (10, 4, '/(cmd|base64|shell|eval|whoami|system|\\$_|proc_|socket_|posix_|stream_|assert|phpinfo|exec|preg_|file_|passt|preg_r|show_|call_user)/i', 1, NULL);
+INSERT INTO `cms_re` VALUES (10, 4, '/(cmd|base64|shell|eval|whoami|system|\\$_|proc_|socket_|posix_|stream_|assert|phpinfo|exec|preg_|file_|passt|preg_r|call_user)/i', 1, NULL);
 INSERT INTO `cms_re` VALUES (11, 4, '/(print_r|include|passthru|var_dump|call_user_func_array|ipconfig|ifconfig|runtime|invokefunction|construct)/i', 1, NULL);
 INSERT INTO `cms_re` VALUES (12, 5, '/<(iframe|script|body|img|layer|div|meta|style|base|object|input)/i', 1, NULL);
 INSERT INTO `cms_re` VALUES (13, 5, '/(onmouseover|onerror|onload)=/i', 1, NULL);
@@ -112,7 +112,7 @@ INSERT INTO `cms_re` VALUES (15, 6, '/(acunetix-wvs-test-for-some-inexistent-fil
 INSERT INTO `cms_re` VALUES (16, 7, '/(vhost|bbs|host|wwwroot|www|site|root|backup|data|ftp|db|admin|website|web).*\\.(rar|sql|zip|tar\\.gz|tar)/', 1, NULL);
 INSERT INTO `cms_re` VALUES (17, 7, '/\\.(htaccess|mysql_history|bash_history|DS_Store|idea|user\\.ini)/i', 1, NULL);
 INSERT INTO `cms_re` VALUES (18, 10, '~\\d+~', 0, '匹配请求报文中的所有数字');
-INSERT INTO `cms_re` VALUES (19, 10, '~测试数据~', 0, '匹配流量中所有含有\"测试数据\"的,谨慎添加');
+INSERT INTO `cms_re` VALUES (19, 10, '~添加说明~', 0, '正则添加后先使用无痕浏览器访问下首页查看是否有误,由正则导致系统崩溃只能在数据库中该字段了');
 INSERT INTO `cms_re` VALUES (20, 10, '~webshell~i', 0, '匹配含有webshell的字段,i为不区分大小写');
 
 

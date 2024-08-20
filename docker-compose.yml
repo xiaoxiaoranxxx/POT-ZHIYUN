@@ -1,0 +1,36 @@
+services:
+  mysql:
+    container_name: pot-mysql   
+    image: mysql:8.0.22
+    environment:
+      - TZ=Asia/Shanghai
+      - MYSQL_DATABASE=pot_admin
+      - MYSQL_ROOT_PASSWORD=pot_admin@123
+    volumes:
+      - /mysql-data:/var/lib/mysql
+      - ./xiao1.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+    command: [
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci',
+    ]
+  web1:
+    container_name: pot-1
+    build: .
+    ports:
+      - "80:80"
+    depends_on: 
+      - mysql
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+  web2:   
+    container_name: pot-2
+    build: .
+    ports:
+      - "8080:80"
+    depends_on: 
+      - mysql
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
