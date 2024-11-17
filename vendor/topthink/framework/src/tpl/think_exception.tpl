@@ -1,4 +1,4 @@
-<?php
+404<?php
 /** @var array $traces */
 if (!function_exists('parse_padding')) {
     function parse_padding($source)
@@ -89,16 +89,8 @@ if (!function_exists('echo_value')) {
     }
 }
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>系统发生错误</title>
-</head>
-<body>
     <?php if (\think\facade\App::isDebug()) { ?>
         <?php foreach ($traces as $index => $trace) { ?>
-    <div class="exception">
         <div class="message">
             <div class="info">
                 <div>
@@ -140,16 +132,12 @@ if (!function_exists('echo_value')) {
             </ol>
         </div>
     </div>
-        <?php } ?>
-    <?php } else { ?>
-    <div class="exception">
-        <div class="info"><h1><?php echo htmlentities($message); ?></h1></div>
-    </div>
-    <?php } ?>
-    
-    <?php if (!empty($datas)) { ?>
-    <div class="exception-var">
-        <h2>Exception Datas</h2>
+<?php } ?>
+<?php } else { ?>
+<?php } ?>
+<?php if (!empty($datas)) { ?>
+<div class="exception-var">
+<h2>Exception Datas</h2>
         <?php foreach ((array) $datas as $label => $value) { ?>
         <table>
             <?php if (empty($value)) { ?>
@@ -169,7 +157,6 @@ if (!function_exists('echo_value')) {
         <?php } ?>
     </div>
     <?php } ?>
-
     <?php if (!empty($tables)) { ?>
     <div class="exception-var">
         <h2>Environment Variables</h2>
@@ -190,9 +177,7 @@ if (!function_exists('echo_value')) {
             <?php } ?>
         </table>
         <?php } ?>
-    </div>
     <?php } ?>
-
     <?php if (\think\facade\App::isDebug()) { ?>
     <script>
         function $(selector, node){
@@ -246,12 +231,10 @@ if (!function_exists('echo_value')) {
             
             $('head')[0].appendChild(script);
         }
-
         ;(function(){
             var files = $('.toggle');
             var ol    = $('ol', $('.prettyprint')[0]);
             var li    = $('li', ol[0]);   
-
             // 短路径和长路径变换
             for(var i = 0; i < files.length; i++){
                 files[i].ondblclick = function(){
@@ -261,7 +244,6 @@ if (!function_exists('echo_value')) {
                     this.innerHTML = title;
                 }
             }
-
             (function () {
                 var expand = function (dom, expand) {
                     var ol = $('ol', dom.parentNode)[0];
@@ -285,12 +267,9 @@ if (!function_exists('echo_value')) {
                     };
                 }
             })();
-
             $.getScript('//cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js', function(){
                 prettyPrint();
             });
         })();
     </script>
     <?php } ?>
-</body>
-</html>

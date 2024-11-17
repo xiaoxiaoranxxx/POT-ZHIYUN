@@ -23,6 +23,7 @@ use app\model\LogteViewAgday;
 use app\model\LogteViewAgmothe;
 use app\model\PotViewAgcount;
 use app\model\PotViewAgpot;
+use app\model\Vuln;
 use app\model\PotDnslog;
 use app\model\NodeView;
 use app\model\Node;
@@ -99,6 +100,56 @@ class Xadmin extends BaseController
         }
     }
 
+    public function vulnkey()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = Vuln::listlog($post);
+            return json($list);
+        } else {
+            return View::fetch();
+        }
+    }
+    public function vulnkeyadd()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = Vuln::add($post);
+            return json($list);
+        } else {
+            return View::fetch();
+        }
+    }
+
+    public function vulnkeydel()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = Vuln::del($post);
+            return json($list);
+        }
+    }
+
+    public function vulnkeyupdate()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = Vuln::updd($post);
+            return json($list);
+        }
+    }
+
+    public function vulnkeyedit()
+    {
+        if ($this->request->isJson()) {
+            $post = $this->request->param();
+            $list = Vuln::vulnkeywhere($post);
+            return json($list);
+        } else {
+            View::assign('arr', Cache::get('vulnkeywhere'));
+            return View::fetch();
+        }
+    }
 
     public function syskey()
     {
@@ -165,7 +216,6 @@ class Xadmin extends BaseController
         }
         View::assign('normalTraffic', json_encode($normalTraffic));
         View::assign('maliciousTraffic', json_encode($maliciousTraffic));
-
         View::assign('alllog', Logte::getallconut());
         View::assign('allelog', Logte::getalleconut());
         View::assign('allregister', Logte::getdayconut());
@@ -456,6 +506,12 @@ class Xadmin extends BaseController
                     "title": "指纹KEY定义",
                     "href": "syskey",
                     "icon": "fa fa-bullseye",
+                    "target": "_self"
+                },
+                {
+                    "title": "Vuln自定义",
+                    "href": "vulnkey",
+                    "icon": "fa fa-bug",
                     "target": "_self"
                 },
                 {

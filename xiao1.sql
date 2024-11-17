@@ -144,6 +144,36 @@ INSERT INTO `cms_key` VALUES (5, '2024-08-07 00:48:03', 'Jenkins', 'Jenkins', 'h
 
 
 -- ----------------------------
+-- Table structure for cms_vuln
+-- ----------------------------
+DROP TABLE IF EXISTS `cms_vuln`;
+CREATE TABLE `cms_vuln`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` datetime NOT NULL,
+  `range` varchar(25) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `rerequest` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `response` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `remark` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cms_vuln
+-- ----------------------------
+INSERT INTO `cms_vuln` VALUES (1, '2024-11-15 13:03:39', 'requestUri', '~systemLog/downFile.php\\?fileName=[./]*/etc/passwd$~', 'root:x:0:0:root:/root:/bin/bash\r\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\r\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\r\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\r\nsync:x:4:65534:sync:/bin:/bin/sync\r\ngames:x:5:60:games:/usr/games:/usr/sbin/nologin\r\nman:x:6:12:man:/var/cache/man:/usr/sbin/nologin\r\nlp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin\r\nmail:x:8:8:mail:/var/mail:/usr/sbin/nologin\r\nnews:x:9:9:news:/var/spool/news:/usr/sbin/nologin\r\nuucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin\r\nproxy:x:13:13:proxy:/bin:/usr/sbin/nologin\r\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\r\nbackup:x:34:34:backup:/var/backups:/usr/sbin/nologin\r\nmysql:x:1:1:mysql:/usr/sbin:/usr/sbin/nologin', 1, '海康威视流媒体管理服务器后台任意文件读取漏洞');
+INSERT INTO `cms_vuln` VALUES (2, '2024-11-17 16:25:51', 'requestUri', '~systemLog/downFile.php\\?fileName=[./]*/etc/hostname$~', 'iZ2zrhywnj8wlb49jjpimhZ', 1, '海康威视流媒体管理服务器后台任意文件读取漏洞');
+INSERT INTO `cms_vuln` VALUES (3, '2024-11-17 16:25:59', 'requestUri', '~systemLog/downFile.php\\?fileName=[./]*/root/.bash_history~', 'exit\nls\ncd /usr/lib64/\nls\nls -al libcrypto*\nmake\nsudo su\nls -al libcrypto*\nls -al libssl*\nln -s libssl.so.10 libssl3.so\nln -s  libssl3.so libssl.so.10\nls -al libssl*\nchmod -R 777  libssl.so.1.0.2k\nsudo su\ncd /usr/lib64/\nls\ndmesg\nmake run\nyum search autofs\nsudo yum install libsss_autofs autofs -y\nmake run\ndmesg\nmake run\ndmesg\nls\ncd ../\nls\nrm openssl-1.0.2k*\nls\nsudo rm -rf openssl-1.0.2k*\nls\nrz\nls\nmkdir tes\nls\ncd /home/liyonglei/.ssh\n', 1, '海康威视流媒体管理服务器后台任意文件读取漏洞');
+INSERT INTO `cms_vuln` VALUES (4, '2024-11-17 16:24:24', 'requestUri', '~/.git/config$~', '[core]\n	repositoryformatversion = 0\n	filemode = true\n	bare = false\n	logallrefupdates = true\n[remote \"origin\"]\n	url = https://github.com/\n	fetch = +refs/heads/*:refs/remotes/origin/*\n[branch \"master\"]\n	remote = origin\n	merge = refs/heads/master', 1, 'git信息泄露');
+INSERT INTO `cms_vuln` VALUES (6, '2024-11-17 16:31:17', 'requestUri', '~/jmreport/testConnection~', '{\"success\":false,\"message\":\"数据库连接失败：Communications link failure\\n\\nThe last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.\",\"code\":500,\"result\":null,\"timestamp\":1730913441446}', 1, 'JeecgBoot 积木报表 testConnection');
+INSERT INTO `cms_vuln` VALUES (9, '2024-11-17 16:41:47', 'requestUri', '~/v1/cs/ops/data/removal~', '{\"code\":500,\"message\":\"File \'/tmp/file676477537739304485.tmp\' does not exist\",\"data\":null}', 1, 'Nacos /v1/cs/ops/data/removal 远程代码执行漏洞');
+INSERT INTO `cms_vuln` VALUES (8, '2024-11-17 16:46:04', 'requestContent', '~username=nacos.pass~', '{\"accessToken\":\"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuYWNvcyIsImV4cCI6MTczMDkzODAzMn0.-H4FQ65nNe2x3ooMxitBLogQKOh_gPkONZ8V_Oe1a9wYZiYV9yzbHyeTKZ90mB7XLJ5vZucc0wkwlJQ16PjlOg\",\"tokenTtl\":18000,\"globalAdmin\":true,\"username\":\"nacos\"}', 1, 'nacos弱口令');
+INSERT INTO `cms_vuln` VALUES (7, '2024-11-17 16:53:18', 'requestUri', '~/swagger-resources/configuration/ui~', '{\"deepLinking\":true,\"displayOperationId\":false,\"defaultModelsExpandDepth\":1,\"defaultModelExpandDepth\":1,\"defaultModelRendering\":\"example\",\"displayRequestDuration\":false,\"docExpansion\":\"none\",\"filter\":false,\"operationsSorter\":\"alpha\",\"showExtensions\":false,\"showCommonExtensions\":false,\"tagsSorter\":\"alpha\",\"validatorUrl\":\"\",\"supportedSubmitMethods\":[\"get\",\"put\",\"post\",\"delete\",\"options\",\"head\",\"patch\",\"trace\"],\"swaggerBaseUiUrl\":\"\"}', 1, 'swagger ui 未授权访问漏洞');
+INSERT INTO `cms_vuln` VALUES (10, '2024-11-17 16:54:44', 'requestUri', '~/nacos/v1/console/server/state~', '{\"version\":\"2.0.3\",\"standalone_mode\":\"standalone\",\"function_mode\":null}', 1, 'nacos版本');
+INSERT INTO `cms_vuln` VALUES (11, '2024-11-17 17:03:02', 'requestUri', '~/actuator/env~', 'null', 1, 'SpringBoot Actuator');
+INSERT INTO `cms_vuln` VALUES (5, '2024-11-17 17:08:15', 'requestUri', '~/www.tar.gz~', 'xxxx', 1, '备份文件');
+
+-- ----------------------------
 -- Table structure for pot_dnslog
 -- ----------------------------
 DROP TABLE IF EXISTS `pot_dnslog`;

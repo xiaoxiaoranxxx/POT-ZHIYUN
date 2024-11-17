@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/css/public.css" media="all">
+</head>
+<body>
+<script type="text/html" id="ID-table-demo-templet-switch">
+    <input type="checkbox" name="status" lay-skin="switch" {{d.status ==1 ? "checked" : "" }} disabled>
+</script>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset id="elementId" class="table-search-fieldset layui-hide">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">更新时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="date" id="ID-laydate" autocomplete="off"
+                                    class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit
+                                lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="reset" class="layui-btn layui-btn-primary" id="reset-btn">
+                                <i class="layui-icon"></i> 重 置
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+        </script>
+
+    </div>
+</div>
+<script src="/static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'table', 'laydate'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            laydate = layui.laydate,
+            table = layui.table;
+
+        laydate.render({
+            elem: '#ID-laydate'
+        });
+        
+        table.render({
+            elem: '#currentTableId',
+            url: '/xadmin/vulnkey',
+            contentType: 'application/json',
+            method: 'post',
+            request: {
+                pageName: 'page', // 页码的参数名称，默认：page
+                limitName: 'limit' // 每页数据条数的参数名，默认：limit
+            },
+
+            toolbar: '#toolbarDemo',
+            defaultToolbar: [{
+                title: '搜索',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-search'
+            }, 'filter', 'exports', 'print'],
+            cols: [[
+                {type: "checkbox", width: 50},
+                { field: 'id', width: 50, title: 'ID' },
+                { field: 'date', width: 160, title: '更新时间' },
+                { field: 'status', width: 80, title: '状态', templet: '#ID-table-demo-templet-switch' },
+                { field: 'range', width: 130, title: '作用范围' },
+                { field: 'rerequest', minWidth: 280, title: '正则路由' },
+                { field: 'remark', minWidth: 100, title: '备注' },
+                { title: '操作', minWidth: 80, toolbar: '#currentTableBar', align: "center"}
+            ]],
+            limits: [10, 25, 50, 100],
+            limit: 10,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            //  执行搜索重载
+            table.reload('currentTableId', {
+                url: '/xadmin/vulnkey',
+                method: 'post',
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    searchParams: result
+                }, done: function (res, curr, count) {
+                    if (res.code === 0) {
+                        layer.msg("搜索成功，成功搜索到" + res.count + "条数据");
+                    } else {
+                        layer.msg('未搜索到数据或发生错误');
+                    }
+                }
+            });
+
+            return false;
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加用户',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['81%', '81%'],
+                    content: 'vulnkeyadd.html',
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+
+                
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+                    if (data.length !== 1) {
+                        return layer.msg('请选择一行');
+                    } else {
+                        layer.confirm('真的删除行么', function (index) {
+                                var jsonData = { id: data[0].id , range: data[0].range};
+                                $.ajax({
+                                    url: '/xadmin/vulnkeydel',
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify(jsonData),
+                                    success: function (data) {
+                                        layer.msg(data.msg);
+                                            table.reload('currentTableId', {
+                                            page: {
+                                                curr: 1
+                                            }
+                                            , where: {
+                                            }
+                                        }, 'data');
+                                    },
+                                    error: function (data) {
+                                        layer.msg("未知错误,添加失败");
+                                    }
+                                });
+                                
+                        });
+                        
+
+                    }
+                
+            }else if (obj.event === 'LAYTABLE_TIPS') {  // 监听删除操作
+                layui.$('#elementId').toggleClass('layui-hide');
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                var jsonData = { id: data.id };
+                $.ajax({
+                    url: 'vulnkeyedit',
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify(jsonData),
+                    success: function (response) {
+                        var index = layer.open({
+                            title: '修改信息',
+                            type: 2,
+                            shade: 0.2,
+                            maxmin: true,
+                            shadeClose: true,
+                            area: ['40%', '85%'],
+                            content: 'vulnkeyedit.html'
+                        });
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>
