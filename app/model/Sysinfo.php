@@ -2,7 +2,6 @@
 
 namespace app\model;
 
-
 use think\Model;
 
 class Sysinfo extends Model
@@ -14,6 +13,13 @@ class Sysinfo extends Model
     {
         $result = self::select()->column('value');
         return $result;
+    }
+
+    public static function getdnslist()
+    {
+        $whitelist = self::where('id', 9)->value('value');
+        $blacklist = self::where('id', 10)->value('value');
+        return array($whitelist, $blacklist);
     }
 
     public static function updatelist($params)
@@ -39,8 +45,13 @@ class Sysinfo extends Model
                 ['id' => 7, 'value' => $params['password']],
                 ['id' => 8, 'value' => $params['port']],
             ]);
+        } elseif ($params['dataType'] == "dns") {
+            $result = $userModel->saveAll([
+                ['id' => 9, 'value' => $params['whitelist']],
+                ['id' => 10, 'value' => $params['blacklist']],
+            ]);
         } else {
-            $result=false;
+            $result = false;
         }
 
         if ($result) {

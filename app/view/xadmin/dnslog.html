@@ -45,7 +45,7 @@
             <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
                 <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 刷新 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 查看详情 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete">dns配置需要在:系统信息配置->dns黑白名单配置'修改后生效 </button>
             </div>
             </script>
 
@@ -131,23 +131,6 @@
                         layui.$('#elementId').toggleClass('layui-hide');
                         break;
                     case 'delete':
-                        var checkStatus = table.checkStatus('currentTableId')
-                            , data = checkStatus.data;
-                        if (data.length !== 1) {
-                            return layer.msg('请选择一行');
-                        } else {
-
-                            var content = '';
-                            for (var key in data[0]) {
-                                content += key + ': ' + data[0][key] + '<br>';
-                            }
-                            layer.open({
-                                title: '编辑',
-                                type: 0,
-                                area: ['60%', '60%'],
-                                content: content
-                            });
-                        }
                         break
                     case 'add':
                         table.reload('currentTableId', {

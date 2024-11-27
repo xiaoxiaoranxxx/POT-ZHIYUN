@@ -9,6 +9,8 @@ use app\model\PotDnslog;
 use think\facade\Session;
 use app\model\NodeView;
 use app\model\Vuln;
+use app\model\Sysinfo;
+
 class TrafficMiddleware
 {
     public function handle(Request $request, \Closure $next)
@@ -47,13 +49,13 @@ class TrafficMiddleware
             }
             switch ($rule['range']) {
                 case 'requestContent':
-                    $retest = $requestContent; 
+                    $retest = $requestContent;
                     break;
                 case 'RequestStr':
-                    $retest = $RequestStr; 
+                    $retest = $RequestStr;
                     break;
                 case 'requestUri':
-                    $retest = $requestUri; 
+                    $retest = $requestUri;
                     break;
             }
             $result = preg_match(
@@ -75,28 +77,42 @@ class TrafficMiddleware
         //     $response = $response->code(200);
         //     $log->confusion = 1;
         // }
-        
+
         // dnslog混淆
-        $pattern = '/\b(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9-]+\.[a-zA-Z0-9-]+\.[a-zA-Z]{2,})/';
-        $charArray = ['java', 'schemas', 'about', 'convert', 'services', 'xmlns', 'docs', 'developer'];
-        if (preg_match_all($pattern, $RequestStr, $matchess)) {
-            foreach ($matchess[1] as $domain) {
-                $segments = explode('.', $domain);
-                if (strlen($segments[0]) >= 4 && strlen($segments[1]) >= 4 && strlen($segments[2]) <= 5 && !in_array($segments[0], $charArray)) {
-                    $ip = gethostbyname($domain);
-                    if ($ip !== $domain) {
-                        $dnslog = new PotDnslog();
-                        $dnslog->domains = $domain;
-                        $dnslog->ip = $ip;
-                        $dnslog->ipaddr = getsipaddr($ip);
-                        $dnslog->date = $log->date;
-                        $dnslog->payload = $log->requests;
-                        $dnslog->save();
-                        if ($request->baseUrl() !== "/") {
-                            $response = redirect('/');
-                        }
-                        $log->confusion = 1;
+        $pattern = '/(?:[a-zA-Z0-9-]+\.){2,}[a-zA-Z]{2,}/';
+        $dnslist = Sysinfo::getdnslist();
+        $whitelist = explode("|", $dnslist[0]);
+        $blacklist = explode("|", $dnslist[1]);
+        if (preg_match($pattern, $RequestStr, $matchess)) {
+            $domain = $matchess[0];
+            $segments = explode('.', $domain);
+            $isValid = true;
+            foreach ($segments as $segment) {
+                if (in_array($segment, $whitelist)) {
+                    $isValid = false;
+                    break;
+                }
+            }
+            foreach ($segments as $segment) {
+                if (in_array($segment, $blacklist)) {
+                    $isValid = true;
+                    break;
+                }
+            }
+            if ($isValid) {
+                $ip = gethostbyname($domain);
+                if ($ip !== $domain) {
+                    $dnslog = new PotDnslog();
+                    $dnslog->domains = $domain;
+                    $dnslog->ip = $ip;
+                    $dnslog->ipaddr = getsipaddr($ip);
+                    $dnslog->date = $log->date;
+                    $dnslog->payload = $log->requests;
+                    $dnslog->save();
+                    if ($request->baseUrl() !== "/") {
+                        $response = redirect('/');
                     }
+                    $log->confusion = 1;
                 }
             }
         }

@@ -24,6 +24,7 @@
                 <li class="layui-this">网站首页设置</li>
                 <li>后台路径自定义</li>
                 <li>邮箱KEY配置</li>
+                <li>dns黑白名单配置</li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
@@ -129,6 +130,38 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="layui-tab-item">
+                    <div class="layui-form layuimini-form">
+
+                    <div class="layui-form-item" style="display: none;">
+                        <label class="layui-form-label">dataType</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="dataType" value="dns">
+                        </div>
+                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">白名单</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="whitelist" placeholder="请输入path" value="{$arr[8]}" class="layui-input">
+                                <tip>请求报文中域名含有以上字段直接跳过,适用于baidu平台域名加白</tip>
+                            </div>
+                            <br>
+                            <label class="layui-form-label">黑名单</label>
+                             <div class="layui-input-block">
+                                <input type="text" name="blacklist" placeholder="请输入path" value="{$arr[9]}" class="layui-input">
+                                <tip>请求报文中域名含有以上字段直接解析,适用于dnslog平台域名加黑</tip>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </div>
 
