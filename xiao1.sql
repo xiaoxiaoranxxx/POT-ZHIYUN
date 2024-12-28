@@ -305,7 +305,7 @@ CREATE TABLE `cms_sysinfo`  (
 INSERT INTO `cms_sysinfo` VALUES (1, '2024-08-09 19:26:09', 'title1', '欢迎来到ZHIYUN系统');
 INSERT INTO `cms_sysinfo` VALUES (2, '2024-08-17 23:02:48', 'title2', '随着新一代信息技术与物流业融合，物流业需要推动传统物流模式向数字化、智能化、网联化的智慧物流模式转变。');
 INSERT INTO `cms_sysinfo` VALUES (3, '2024-08-09 22:12:57', 'License', 'Copyright © 2024 ZHIYUN MIT Licensed\n');
-INSERT INTO `cms_sysinfo` VALUES (4, '2024-08-09 20:07:27', 'syspath', '/xlogin/login')
+INSERT INTO `cms_sysinfo` VALUES (4, '2024-08-09 20:07:27', 'syspath', '/xlogin/login');
 INSERT INTO `cms_sysinfo` VALUES (5, '2024-08-09 19:18:59', 'mailhost', 'smtp.qq.com');
 INSERT INTO `cms_sysinfo` VALUES (6, '2024-08-09 20:06:41', 'username', 'xxxxxx@qq.com');
 INSERT INTO `cms_sysinfo` VALUES (7, '2024-08-09 20:06:41', 'password', 'xxxxxxxxxxxxxxx');
