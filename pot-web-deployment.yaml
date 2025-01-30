@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-data-pot-web
+  namespace: pot-zhiyun
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard-pot-web
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pot-web-pv
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard-pot-web
+  hostPath:
+    path: /mnt/data/pot-web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pot-web
+  namespace: pot-zhiyun
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: pot-web
+  template:
+    metadata:
+      labels:
+        app: pot-web
+    spec:
+      initContainers:
+        - name: init-permissions
+          image: busybox
+          command: ["sh", "-c", "chmod -R 777 /var/www/html/runtime/"]
+          volumeMounts:
+            - name: mysql-data-pot
+              mountPath: /var/www/html/runtime/
+      containers:
+        - name: pot-web
+          image: install/pot-main:v1
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: mysql-data-pot
+              mountPath: /var/www/html/runtime/
+      volumes:
+        - name: mysql-data-pot
+          persistentVolumeClaim:
+            claimName: mysql-data-pot-web
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pot-web
+  namespace: pot-zhiyun
+spec:
+  type: NodePort
+  externalTrafficPolicy: Local
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: pot-web

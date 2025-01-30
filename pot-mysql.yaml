@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv
+  namespace: pot-zhiyun
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard-pot-mysql
+  hostPath: 
+    path: /mnt/data/pot-mysql
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-data-pot-mysql
+  namespace: pot-zhiyun
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: standard-pot-mysql
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pot-mysql
+  namespace: pot-zhiyun
+spec:
+  serviceName: "pot-mysql"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pot-mysql
+  template:
+    metadata:
+      labels:
+        app: pot-mysql
+    spec:
+      volumes:
+      - name: init-scripts
+        configMap:
+          name: mysql-initdb-config
+      containers:
+      - name: pot-mysql
+        image: mysql:8.0.22
+        env:
+        - name: MYSQL_DATABASE
+          value: pot_admin
+        - name: MYSQL_USER
+          value: root
+        - name: MYSQL_ROOT_PASSWORD
+          value: pot_admin@123
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-data-pot
+          mountPath: /var/lib/mysql
+        - name: init-scripts
+          mountPath: /docker-entrypoint-initdb.d
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-data-pot
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pot-mysql
+  namespace: pot-zhiyun
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: pot-mysql
